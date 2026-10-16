@@ -1,0 +1,928 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter House | Bookstore</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+
+    :root {
+    --cream: #f7f4ed;
+    --dark: #29312d;
+    --muted: #85857b;
+    --rust: #b34e32;
+    --line: #e5e0d6;
+    --serif: "Playfair Display", Georgia, serif;
+    --sans: "DM Sans", Arial, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: var(--sans);
+    font-size: 13px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Header */
+.header {
+    background: var(--cream);
+}
+
+.topbar {
+    min-height: 64px;
+    padding: 12px 5.4%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: 1px solid var(--line);
+}
+
+.logo {
+    font-family: var(--serif);
+    font-size: 24px;
+    white-space: nowrap;
+    letter-spacing: -1px;
+}
+
+.book-icon {
+    color: var(--rust);
+    margin-right: 6px;
+    font-size: 25px;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 260px;
+    background: #eee9dd;
+    border: 1px solid #e4dfd4;
+    border-radius: 3px;
+    padding: 0 12px;
+    height: 38px;
+}
+
+.search span {
+    font-size: 23px;
+    color: #77786e;
+}
+
+.search input {
+    width: 100%;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 10px;
+}
+
+.header-links {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.header-links a:hover,
+.navbar a:hover {
+    color: var(--rust);
+}
+
+.navbar {
+    min-height: 37px;
+    padding: 0 5.4%;
+    display: flex;
+    align-items: center;
+    gap: 27px;
+    border-bottom: 1px solid var(--line);
+    font-size: 10px;
+}
+
+.navbar .active {
+    color: var(--rust);
+}
+
+.reading-room {
+    margin-left: auto;
+    color: var(--muted);
+    font-style: italic;
+}
+
+/* Shared sections */
+.section {
+    padding-left: 5.4%;
+    padding-right: 5.4%;
+}
+
+.featured {
+    padding-top: 61px;
+    padding-bottom: 27px;
+}
+
+.eyebrow {
+    color: #b53e25;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.section-heading h1,
+.newsletter h1 {
+    font-family: var(--serif);
+    font-size: clamp(25px, 3vw, 31px);
+    line-height: 1.3;
+    font-weight: 400;
+    letter-spacing: -1.1px;
+}
+
+.text-link {
+    color: var(--rust);
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.text-link:hover,
+.borrow:hover,
+.featured-bottom a:hover {
+    text-decoration: underline;
+}
+
+/* Books */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.book-card {
+    min-width: 0;
+}
+
+.book-art {
+    height: 242px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.art-yellow { background: #ebe5d8; }
+.art-blue { background: #e2e9e6; }
+.art-green { background: #e1e5d8; }
+.art-peach { background: #eadbd0; }
+
+.bookmark {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 23px;
+    height: 23px;
+    background: #fffdf8;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2;
+    color: #30352f;
+    font-size: 15px;
+}
+
+.bookmark.saved {
+    color: var(--rust);
+}
+
+.cover {
+    width: 59%;
+    max-width: 150px;
+    height: 190px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    box-shadow: 5px 8px 12px #00000019;
+    overflow: hidden;
+    transition: transform 0.25s ease;
+}
+
+.book-card:hover .cover {
+    transform: translateY(-4px);
+}
+
+.cover-yellow { background: #e9bd50; }
+.cover-blue { background: #b2c8cb; }
+.cover-green { background: #243e32; }
+.cover-peach { background: #e9bda4; }
+
+.cover-title {
+    height: 55px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--serif);
+    font-size: clamp(12px, 1.5vw, 17px);
+    line-height: 1.1;
+    padding: 4px;
+    color: #222b27;
+}
+
+.cover-green .cover-title {
+    color: #fffaf0;
+}
+
+.cover img {
+    height: 111px;
+    width: calc(100% - 10px);
+    margin: 0 5px;
+    object-fit: cover;
+    border: 2px solid #ffffff65;
+}
+
+.cover .author {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    letter-spacing: 0.8px;
+    color: #31352d;
+}
+
+.cover-green .author {
+    color: #fffaf0;
+}
+
+.book-type {
+    margin-top: 14px;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 8px;
+    letter-spacing: 0.5px;
+}
+
+.book-card h2 {
+    font-family: var(--serif);
+    font-size: clamp(14px, 1.6vw, 17px);
+    line-height: 1.4;
+    font-weight: 400;
+    overflow-wrap: anywhere;
+}
+
+.author-name {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.borrow {
+    display: inline-block;
+    color: var(--rust);
+    margin-top: 12px;
+    font-size: 10px;
+}
+
+.featured-bottom {
+    margin-top: 24px;
+    padding-top: 15px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.featured-bottom p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.featured-bottom a {
+    color: var(--rust);
+    font-size: 9px;
+}
+
+/* Genre section */
+.genres {
+    background: #ede7da;
+    padding-top: 43px;
+    padding-bottom: 48px;
+}
+
+.genres .section-heading {
+    margin-bottom: 24px;
+}
+
+.genre-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.genre-card {
+    background: #f8f5ee;
+    min-height: 129px;
+    padding: 16px 15px;
+    position: relative;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.genre-card:hover {
+    background: white;
+    transform: translateY(-3px);
+}
+
+.genre-icon {
+    display: block;
+    color: #c25134;
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+.arrow {
+    position: absolute;
+    right: 14px;
+    top: 17px;
+    color: #7f8278;
+    font-size: 13px;
+}
+
+.genre-card h2 {
+    font-family: var(--serif);
+    font-size: clamp(13px, 1.6vw, 17px);
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.genre-card p {
+    font-size: 8px;
+    line-height: 1.6;
+    color: var(--muted);
+}
+
+/* Newsletter */
+.newsletter {
+    padding: 46px 5.4%;
+    background: #e2e7d9;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 55px;
+}
+
+.newsletter-copy h1 {
+    max-width: 420px;
+    margin-bottom: 14px;
+}
+
+.newsletter-copy > p:last-child {
+    max-width: 440px;
+    color: #77796f;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.form-row {
+    display: flex;
+    gap: 8px;
+}
+
+.form-row input {
+    flex: 1;
+    min-width: 0;
+    height: 37px;
+    padding: 0 13px;
+    background: var(--cream);
+    border: 1px solid #e7e2d8;
+    outline-color: var(--rust);
+    font-size: 10px;
+}
+
+.form-row button {
+    background: #a94d32;
+    color: white;
+    border: none;
+    padding: 0 17px;
+    min-width: 116px;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.form-row button:hover {
+    background: #893a26;
+}
+
+.form-row button span {
+    margin-left: 12px;
+}
+
+.newsletter-form > p {
+    margin-top: 12px;
+    font-size: 8px;
+    color: #85877d;
+    line-height: 1.6;
+}
+
+/* Footer */
+.footer {
+    padding: 43px 5.4% 30px;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 35px;
+}
+
+.footer-brand .logo {
+    font-size: 22px;
+}
+
+.brand-quote {
+    margin-top: 15px;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.socials {
+    display: flex;
+    gap: 16px;
+    margin-top: 13px;
+}
+
+.socials a {
+    color: var(--rust);
+    font-size: 15px;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-column h3 {
+    font-size: 8px;
+    letter-spacing: 0.6px;
+    margin-bottom: 2px;
+}
+
+.footer-column a {
+    color: #85857b;
+    font-size: 9px;
+}
+
+.footer-column a:hover {
+    color: var(--rust);
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .topbar {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .search {
+        order: 3;
+        width: 100%;
+    }
+
+    .navbar {
+        gap: 17px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .book-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 18px;
+    }
+
+    .book-art {
+        height: 270px;
+    }
+
+    .cover {
+        height: 210px;
+        width: 48%;
+    }
+
+    .cover img {
+        height: 125px;
+    }
+
+    .genre-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .newsletter {
+        gap: 25px;
+    }
+
+    .footer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+    .topbar {
+        padding: 14px 5%;
+    }
+
+    .logo {
+        font-size: 21px;
+    }
+
+    .header-links {
+        gap: 8px;
+        font-size: 9px;
+    }
+
+    .navbar {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .section {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .featured {
+        padding-top: 40px;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .section-heading h1,
+    .newsletter h1 {
+        font-size: 27px;
+    }
+
+    .book-grid {
+        gap: 25px 12px;
+    }
+
+    .book-art {
+        height: 195px;
+    }
+
+    .cover {
+        width: 72%;
+        height: 155px;
+    }
+
+    .cover-title {
+        height: 45px;
+        font-size: 13px;
+    }
+
+    .cover img {
+        height: 85px;
+    }
+
+    .cover .author {
+        font-size: 6px;
+    }
+
+    .book-card h2 {
+        font-size: 15px;
+    }
+
+    .featured-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .genres {
+        padding-top: 35px;
+        padding-bottom: 35px;
+    }
+
+    .genre-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .genre-card {
+        min-height: 125px;
+    }
+
+    .newsletter {
+        grid-template-columns: 1fr;
+        padding: 38px 5%;
+        gap: 22px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-row input,
+    .form-row button {
+        height: 42px;
+    }
+
+    .footer {
+        padding: 35px 5%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 30px 18px;
+    }
+}
+</style>
+    
+    <header class="header">
+        <style></style>
+        <div class="topbar">
+            <a href="#" class="logo">
+                <span class="book-icon">♧</span> Chapter House
+            </a>
+
+            <div class="search">
+                <span>⌕</span>
+                <input type="text" placeholder="Search books, authors, and more">
+            </div>
+
+            <div class="header-links">
+                <a href="#">♙ Account</a>
+                <a href="#">▣ Bag (0)</a>
+                <a href="#">◷ Record</a>
+            </div>
+        </div>
+
+        <nav class="navbar">
+            <a href="#">All books</a>
+            <a href="#">New &amp; noteworthy</a>
+            <a href="#">Bestsellers</a>
+            <a href="#" class="active">Our picks</a>
+            <a href="#genres">Genres</a>
+            <a href="#">Gifts &amp; stationery</a>
+            <a href="#" class="reading-room">The Reading Room ↗</a>
+        </nav>
+    </header>
+
+    <!-- Featured Books -->
+    <main>
+
+        <section class="featured section">
+            <p class="eyebrow">THE BOOKS WE CAN'T STOP TALKING ABOUT</p>
+
+            <div class="section-heading">
+                <h1>Good company for your bookshelf.</h1>
+                <a href="#books" class="text-link">Shop all featured reads →</a>
+            </div>
+
+            <div class="book-grid" id="books">
+
+                <article class="book-card">
+                    <div class="book-art art-yellow">
+                        <button class="bookmark" aria-label="Save book">♧</button>
+                        <div class="cover cover-yellow">
+                            <div class="cover-title">The Art of<br>Paying Attention</div>
+                            <img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=500" alt="Still life artwork">
+                            <div class="author">ELENA HART</div>
+                        </div>
+                    </div>
+                    <p class="book-type">ESSAYS · HARDCOVER</p>
+                    <h2>The Art of Paying Attention</h2>
+                    <p class="author-name">Elena Hart</p>
+                    <a href="#" class="borrow">Borrow +</a>
+                </article>
+
+                <article class="book-card">
+                    <div class="book-art art-blue">
+                        <button class="bookmark" aria-label="Save book">♧</button>
+                        <div class="cover cover-blue">
+                            <div class="cover-title">Where the<br>Sea Begins</div>
+                            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500" alt="Mountain landscape">
+                            <div class="author">CLARA WHITMORE</div>
+                        </div>
+                    </div>
+                    <p class="book-type">FICTION · PAPERBACK</p>
+                    <h2>Where the Sea Begins</h2>
+                    <p class="author-name">Clara Whitmore</p>
+                    <a href="#" class="borrow">Borrow +</a>
+                </article>
+
+                <article class="book-card">
+                    <div class="book-art art-green">
+                        <button class="bookmark" aria-label="Save book">♧</button>
+                        <div class="cover cover-green">
+                            <div class="cover-title">A Garden<br>of Small Things</div>
+                            <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=500" alt="Flowers in a garden">
+                            <div class="author">OLIVER REED</div>
+                        </div>
+                    </div>
+                    <p class="book-type">NATURE · HARDCOVER</p>
+                    <h2>A Garden of Small Things</h2>
+                    <p class="author-name">Oliver Reed</p>
+                    <a href="#" class="borrow">Borrow +</a>
+                </article>
+
+                <article class="book-card">
+                    <div class="book-art art-peach">
+                        <button class="bookmark" aria-label="Save book">♧</button>
+                        <div class="cover cover-peach">
+                            <div class="cover-title">The City<br>After Rain</div>
+                            <img src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=500" alt="City at dusk">
+                            <div class="author">MAYA ELLIS</div>
+                        </div>
+                    </div>
+                    <p class="book-type">FICTION · PAPERBACK</p>
+                    <h2>The City After Rain</h2>
+                    <p class="author-name">Maya Ellis</p>
+                    <a href="#" class="borrow">Borrow +</a>
+                </article>
+
+            </div>
+
+            <div class="featured-bottom">
+                <p>Not sure where to start? That's what booksellers are for.</p>
+                <a href="#genres">Let us find your next favorite ↗</a>
+            </div>
+        </section>
+
+        <!-- Genres -->
+        <section class="genres section" id="genres">
+            <p class="eyebrow">FOLLOW YOUR CURIOSITY</p>
+
+            <div class="section-heading">
+                <h1>Which shelf is calling?</h1>
+                <a href="#genres" class="text-link">Explore all genres →</a>
+            </div>
+
+            <div class="genre-grid">
+                <a href="#" class="genre-card">
+                    <span class="genre-icon">♧</span>
+                    <span class="arrow">↗</span>
+                    <h2>Fiction</h2>
+                    <p>Other lives. New worlds.</p>
+                </a>
+
+                <a href="#" class="genre-card">
+                    <span class="genre-icon">♧</span>
+                    <span class="arrow">↗</span>
+                    <h2>Nonfiction</h2>
+                    <p>A little more understanding.</p>
+                </a>
+
+                <a href="#" class="genre-card">
+                    <span class="genre-icon">✎</span>
+                    <span class="arrow">↗</span>
+                    <h2>Poetry</h2>
+                    <p>Small words. Big feelings.</p>
+                </a>
+
+                <a href="#" class="genre-card">
+                    <span class="genre-icon">◉</span>
+                    <span class="arrow">↗</span>
+                    <h2>Art &amp; design</h2>
+                    <p>A different way of seeing.</p>
+                </a>
+
+                <a href="#" class="genre-card">
+                    <span class="genre-icon">☕</span>
+                    <span class="arrow">↗</span>
+                    <h2>Food &amp; living</h2>
+                    <p>For the everyday rituals.</p>
+                </a>
+
+                <a href="#" class="genre-card">
+                    <span class="genre-icon">✧</span>
+                    <span class="arrow">↗</span>
+                    <h2>Young readers</h2>
+                    <p>Wonder starts here.</p>
+                    
+                </a>
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section class="newsletter">
+            <div class="newsletter-copy">
+                <p class="eyebrow">A GOOD LETTER IS A LITTLE GIFT</p>
+                <h1>A little bookishness in your inbox.</h1>
+                <p>Our latest discoveries, reading lists, and notes from the shop. Sent thoughtfully, never too often.</p>
+            </div>
+
+            <form class="newsletter-form" id="newsletterForm">
+                <div class="form-row">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Count me in <span>→</span></button>
+                </div>
+                <p id="formMessage">Just good books. No noise. Unsubscribe whenever you like.</p>
+                  
+            </form>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-brand">
+            <a href="#" class="logo"><span class="book-icon">♧</span> Chapter House</a>
+            <p class="brand-quote">For the books you'll love.<br>And the ones you don't know you<br>need yet.</p>
+            <div class="socials">
+                <a href="#" aria-label="Instagram">◎</a>
+                <a href="#" aria-label="Facebook">f</a>
+                <a href="#" aria-label="Email">✉</a>
+            </div>
+        </div>
+
+        <div class="footer-column">
+            <h3>THE SHELVES</h3>
+            <a href="#">All books</a>
+            <a href="#">New arrivals</a>
+            <a href="#">Bestsellers</a>
+            <a href="#">Bookseller picks</a>
+            <a href="#">Gift cards</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>CHAPTER</h3>
+            <a href="#">Our story</a>
+            <a href="#">The Reading Room</a>
+            <a href="#">Events &amp; book clubs</a>
+            <a href="#">Visit the shop</a>
+            <a href="#">Get in touch</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>HERE TO HELP</h3>
+            <a href="#">Shipping &amp; delivery</a>
+            <a href="#">Returns &amp; exchanges</a>
+            <a href="#">Frequently asked questions</a>
+            <a href="#">Track your order</a>
+            <a href="mailto:hello@chapterhouse.books">hello@chapterhouse.books</a>
+         
+        </div>
+    </footer>
+
+    <script>
+        const form = document.getElementById("newsletterForm");
+        const message = document.getElementById("formMessage");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            message.textContent = "Thank you for joining our reading list!";
+            form.reset();
+        });
+
+        document.querySelectorAll(".bookmark").forEach(function(button) {
+            button.addEventListener("click", function() {
+                button.classList.toggle("saved");
+                button.textContent = button.classList.contains("saved") ? "♥" : "♧";
+            });
+        });
+    </script>
+
+</body>
+</html>
